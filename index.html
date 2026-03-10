@@ -1,521 +1,117 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Job Buddy — Simple Job Application Tracker</title>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <title>Job Buddy — Simply connecting talent to opportunity</title>
+
+  <!-- Brand fonts (optional; falls back to system fonts) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@600;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+
+  <link rel="icon" href="logo.png" type="image/png" />
+
   <style>
-    :root {
-      --bg: #0b1220;
-      --card: #121a2b;
-      --muted: #1a2540;
-      --text: #e6eefc;
-      --faint: #9fb4e5;
-      --accent: #5b8cff;
-      --accent-2: #7af0b6;
-      --warn: #ffd479;
-      --danger: #ff6b6b;
-      --success: #72f1b8;
-      --shadow: 0 10px 30px rgba(0,0,0,0.35);
-      --radius: 14px;
-    }
-    * { box-sizing: border-box; }
-    html, body { height: 100%; }
-    body {
-      margin: 0; font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
-      background: radial-gradient(1200px 800px at 80% -20%, #1a2d63 0%, transparent 60%) no-repeat, var(--bg);
-      color: var(--text);
-    }
-    .container { max-width: 1100px; margin: 32px auto 96px; padding: 0 16px; }
-    header {
-      display: flex; align-items: center; justify-content: space-between; gap: 16px; margin-bottom: 18px;
-    }
-    .title {
-      font-size: clamp(22px, 2.6vw, 34px); font-weight: 800; letter-spacing: 0.2px;
-      display: flex; align-items: center; gap: 12px;
-    }
-    .title .dot {
-      width: 10px; height: 10px; border-radius: 50%; background: linear-gradient(45deg, var(--accent), var(--accent-2)); box-shadow: 0 0 16px rgba(91,140,255,0.8);
-    }
-    .subtitle { color: var(--faint); font-size: 14px; margin-top: -4px; }
-    .grid { display: grid; grid-template-columns: 1.2fr 1fr; gap: 16px; }
-    .card {
-      background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.00));
-      border: 1px solid rgba(255,255,255,0.08);
-      backdrop-filter: blur(8px);
-      border-radius: var(--radius);
-      box-shadow: var(--shadow);
-      padding: 16px;
-    }
-    .card h3 { margin: 0 0 12px; font-size: 16px; letter-spacing: 0.2px; }
-    .row { display: grid; grid-template-columns: repeat(6, 1fr); gap: 8px; }
-    label { font-size: 12px; color: var(--faint); display: block; margin-bottom: 6px; }
-    input, textarea, select {
-      width: 100%; background: #0e1627; border: 1px solid #273a66; color: var(--text);
-      border-radius: 10px; padding: 10px 12px; outline: none;
-    }
-    input:focus, textarea:focus, select:focus { border-color: var(--accent); box-shadow: 0 0 0 3px rgba(91,140,255,0.2); }
-    textarea { min-height: 84px; resize: vertical; }
-    .btn {
-      background: linear-gradient(180deg, #486fe6, #3455c8);
-      border: 1px solid #3a5bd4; color: white; padding: 10px 14px; border-radius: 10px;
-      cursor: pointer; font-weight: 600; letter-spacing: .2px;
-    }
-    .btn.secondary { background: #152039; border-color: #2a3c69; }
-    .btn.warn { background: #5a4100; border-color: #a78000; }
-    .btn.danger { background: #5a1f1f; border-color: #a43f3f; }
-    .btn.ghost { background: transparent; border: 1px dashed #2a3c69; }
-    .btn:disabled { opacity: 0.6; cursor: not-allowed; }
-    .toolbar { display: flex; gap: 8px; flex-wrap: wrap; align-items: center; }
-    .table-wrap { overflow: auto; border-radius: 12px; border: 1px solid rgba(255,255,255,0.08); }
-    table { width: 100%; border-collapse: collapse; min-width: 880px; }
-    th, td { padding: 10px 12px; border-bottom: 1px solid rgba(255,255,255,0.07); font-size: 14px; }
-    th { text-align: left; color: var(--faint); font-weight: 600; background: rgba(255,255,255,0.03); position: sticky; top: 0; backdrop-filter: blur(6px); }
-    tr:hover td { background: rgba(255,255,255,0.03); }
-    .status {
-      padding: 4px 8px; border-radius: 999px; font-size: 12px; font-weight: 700; letter-spacing: 0.2px; display: inline-flex; gap: 6px; align-items: center;
-    }
-    .s-applied { background: rgba(91,140,255,0.15); color: #9fc0ff; border: 1px solid rgba(91,140,255,0.3); }
-    .s-interview { background: rgba(122,240,182,0.12); color: #a3ffdf; border: 1px solid rgba(122,240,182,0.3); }
-    .s-offer { background: rgba(255,212,121,0.12); color: #ffe2a6; border: 1px solid rgba(255,212,121,0.3); }
-    .s-rejected { background: rgba(255,107,107,0.12); color: #ffb3b3; border: 1px solid rgba(255,107,107,0.3); }
-    .pill { font-size: 11px; color: var(--faint); padding: 4px 8px; border: 1px solid rgba(255,255,255,0.08); border-radius: 999px; }
-    .muted { color: var(--faint); }
-    .right { text-align: right; }
-    .nowrap { white-space: nowrap; }
-    .stack { display: grid; gap: 10px; }
-    .split { display: grid; grid-template-columns: 1fr auto; gap: 10px; align-items: end; }
-    .flex { display: flex; gap: 8px; flex-wrap: wrap; }
-    .grow { flex: 1; }
-    .sr { position: absolute; left: -10000px; }
-    footer { margin-top: 24px; color: var(--faint); font-size: 12px; text-align: center; }
-    @media (max-width: 980px) {
-      .grid { grid-template-columns: 1fr; }
-    }
-  </style>
-</head>
-<body>
-  <div class="container">
-    <header>
-      <div>
-        <div class="title"><span class="dot"></span>Job Buddy</div>
-        <div class="subtitle">Track roles, auto‑draft cover letters, and ship more applications—fast.</div>
-      </div>
-      <div class="toolbar">
-        <button class="btn" id="exportBtn">Export CSV</button>
-        <label class="btn ghost" for="importCsvInput">Import CSV</label>
-        <input id="importCsvInput" type="file" accept=".csv" class="sr" />
-        <button class="btn secondary" id="clearAllBtn" title="Remove all data">Reset</button>
-      </div>
-    </header>
+    :root{
+      /* —— Brand (from your logo) —— */
+      --bg: #CFEAFF;          /* sky blue */
+      --surface: #F3F8FF;     /* softer blue */
+      --card: #FFFFFF;        /* card surface */
+      --ink: #0F172A;         /* main text */
+      --muted: #5B6B82;       /* secondary text */
+      --border: #E6EEF8;      /* card borders */
 
-    <!-- Add Job -->
-    <section class="card">
-      <h3>Add a Job</h3>
-      <div class="row">
-        <div>
-          <label>Company</label>
-          <input id="company" placeholder="e.g., Microsoft" />
-        </div>
-        <div>
-          <label>Role</label>
-          <input id="role" placeholder="e.g., Software Engineer" />
-        </div>
-        <div>
-          <label>Location</label>
-          <input id="location" placeholder="e.g., Remote / Atlanta, GA" />
-        </div>
-        <div>
-          <label>Salary (est.)</label>
-          <input id="salary" placeholder="e.g., 120000" />
-        </div>
-        <div>
-          <label>Deadline</label>
-          <input id="deadline" type="date" />
-        </div>
-        <div>
-          <label>Posting Link</label>
-          <input id="link" placeholder="https://..." />
-        </div>
-      </div>
-      <div class="split" style="margin-top:10px;">
-        <div class="stack">
-          <label>Notes</label>
-          <textarea id="notes" placeholder="What stands out? Referral? Recruiter email?"></textarea>
-        </div>
-        <button class="btn" id="addJobBtn" style="height:40px; align-self: end;">Add</button>
-      </div>
-    </section>
+      --brand: #FF4FA3;       /* pink accent */
+      --brand-strong: #D63C86;/* darker pink for hover/focus */
+      --brand-soft: #FFE5F1;  /* light pink tint */
 
-    <!-- Cover Letter Generator -->
-    <section class="card">
-      <h3>Tailored Cover Letter (Client‑Side)</h3>
-      <div class="row">
-        <div style="grid-column: span 3;">
-          <label>Your Profile (highlights)</label>
-          <textarea id="profile" placeholder="3–6 bullets about your experience, stack, impact."></textarea>
-        </div>
-        <div style="grid-column: span 3;">
-          <label>Job Description (paste)</label>
-          <textarea id="jd" placeholder="Paste the job description here..."></textarea>
-        </div>
-      </div>
-      <div class="split" style="margin-top:10px;">
-        <div class="flex">
-          <input id="yourName" class="grow" placeholder="Your Name" />
-          <input id="yourEmail" class="grow" placeholder="you@example.com" />
-          <input id="yourPhone" class="grow" placeholder="(xxx) xxx-xxxx" />
-        </div>
-        <button class="btn" id="genLetterBtn">Generate Letter</button>
-      </div>
-      <div class="stack" style="margin-top:10px;">
-        <label>Draft</label>
-        <textarea id="letterOut" style="min-height:180px;" placeholder="Your tailored letter will appear here..."></textarea>
-        <div class="flex">
-          <button id="copyLetterBtn" class="btn secondary">Copy</button>
-          <button id="downloadLetterBtn" class="btn">Download .txt</button>
-        </div>
-      </div>
-    </section>
-
-    <!-- Toolbar & List -->
-    <section class="card">
-      <div class="split">
-        <h3>Applications</h3>
-        <div class="flex">
-          <input id="search" class="grow" placeholder="Search company, role, location..." />
-          <select id="statusFilter">
-            <option value="all">All Statuses</option>
-            <option value="applied">Applied</option>
-            <option value="interview">Interview</option>
-            <option value="offer">Offer</option>
-            <option value="rejected">Rejected</option>
-            <option value="todo">To Do</option>
-          </select>
-        </div>
-      </div>
-
-      <div class="table-wrap" style="margin-top:12px;">
-        <table id="jobsTable">
-          <thead>
-            <tr>
-              <th>Company</th>
-              <th>Role</th>
-              <th>Location</th>
-              <th>Link</th>
-              <th>Salary</th>
-              <th>Deadline</th>
-              <th>Status</th>
-              <th>Notes</th>
-              <th class="right">Actions</th>
-            </tr>
-          </thead>
-          <tbody id="jobsBody"></tbody>
-        </table>
-      </div>
-    </section>
-
-    <footer>
-      Job Buddy — local and private. Data is stored in your browser. Tip: back up via CSV before clearing cache.
-    </footer>
-  </div>
-
-  <script>
-    // --- Simple State Management ---
-    const key = 'jobbuddy_v1';
-    const $ = (id) => document.getElementById(id);
-    const state = {
-      jobs: [],
-      get filtered() {
-        const q = $('search').value.trim().toLowerCase();
-        const f = $('statusFilter').value;
-        return this.jobs.filter(j => {
-          const hay = [j.company, j.role, j.location, j.notes].join(' ').toLowerCase();
-          const matchesQ = hay.includes(q);
-          const matchesF = f === 'all' ? true : (j.status === f);
-          return matchesQ && matchesF;
-        });
-      }
-    };
-
-    function save() { localStorage.setItem(key, JSON.stringify(state.jobs)); }
-    function load() {
-      try {
-        const raw = localStorage.getItem(key);
-        state.jobs = raw ? JSON.parse(raw) : [];
-      } catch { state.jobs = []; }
-      render();
+      --radius: 16px;
+      --shadow: 0 14px 40px rgba(15,23,42,.08);
+      --ring: 0 0 0 3px rgba(255,79,163,.25);
     }
 
-    // --- CRUD ---
-    function addJob(job) {
-      job.id = crypto.randomUUID();
-      job.createdAt = new Date().toISOString();
-      job.status = job.status || 'todo';
-      state.jobs.unshift(job);
-      save(); render();
-    }
-    function updateJob(id, patch) {
-      const idx = state.jobs.findIndex(j => j.id === id);
-      if (idx >= 0) {
-        state.jobs[idx] = { ...state.jobs[idx], ...patch };
-        save(); render();
-      }
-    }
-    function removeJob(id) {
-      state.jobs = state.jobs.filter(j => j.id !== id);
-      save(); render();
+    *{box-sizing:border-box}
+    html,body{height:100%}
+    body{
+      margin:0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji","Segoe UI Emoji";
+      color:var(--ink);
+      background:
+        radial-gradient(900px 500px at 85% -10%, rgba(255,255,255,0.55), transparent 60%),
+        linear-gradient(180deg, var(--bg), var(--surface));
     }
 
-    // --- UI Helpers ---
-    function statusBadge(s) {
-      const map = {
-        'applied': 's-applied',
-        'interview': 's-interview',
-        'offer': 's-offer',
-        'rejected': 's-rejected',
-        'todo': ''
-      };
-      const label = s[0].toUpperCase() + s.slice(1);
-      const cls = map[s] || '';
-      return \`<span class="status \${cls}">\${label}</span>\`;
+    .container{max-width:1100px;margin:28px auto 96px;padding:0 16px}
+
+    /* ——— Header / Hero ——— */
+    header.hero{
+      display:grid;
+      grid-template-columns:auto 1fr;
+      gap:16px;
+      align-items:center;
+      padding:16px 18px;
+      background:var(--card);
+      border:1px solid var(--border);
+      border-radius:24px;
+      box-shadow:var(--shadow);
+    }
+    .logo-wrap{
+      display:flex;align-items:center;gap:12px;
+    }
+    .logo{
+      width:72px;height:72px;object-fit:contain;
+      background: #E9F5FF; border:1px dashed #BBD8F5; border-radius:14px; padding:8px;
+    }
+    .brand-title{
+      font-family:Poppins, Inter, sans-serif;
+      font-size: clamp(24px, 3.5vw, 36px);
+      font-weight:800; letter-spacing:.3px;
+      line-height:1.05;
+      display:flex; align-items:center; gap:12px;
+    }
+    .brand-title .pink{
+      color:#fff; /* we’ll simulate the black offset shadow from your logo */
+      position:relative; display:inline-block; padding:0 6px;
+    }
+    .brand-title .pink::before{
+      content: attr(data-text);
+      position:absolute; left:2.8px; top:3.2px; color:#0b0b0b; z-index:0;
+      filter: blur(.2px);
+    }
+    .brand-title .pink::after{
+      content: attr(data-text);
+      position:absolute; left:0; top:0; z-index:1;
+      background: linear-gradient(0deg, var(--brand), var(--brand));
+      -webkit-background-clip:text; background-clip:text; color:transparent;
+      text-shadow: 0 0 0 rgba(0,0,0,0);
+    }
+    .brand-sub{
+      color:var(--muted); margin-top:2px; font-size:14px;
     }
 
-    function render() {
-      const tbody = $('jobsBody');
-      tbody.innerHTML = '';
-      for (const j of state.filtered) {
-        const tr = document.createElement('tr');
-        tr.innerHTML = \`
-          <td>\${escapeHtml(j.company)}</td>
-          <td>\${escapeHtml(j.role)}</td>
-          <td>\${escapeHtml(j.location || '')}</td>
-          <td class="nowrap">\${j.link ? '<a href="' + safeUrl(j.link) + '" target="_blank">Open</a>' : ''}</td>
-          <td>\${j.salary ? formatMoney(j.salary) : ''}</td>
-          <td>\${j.deadline ? new Date(j.deadline).toLocaleDateString() : ''}</td>
-          <td>\${statusBadge(j.status)}</td>
-          <td>\${escapeHtml(j.notes || '')}</td>
-          <td class="right nowrap">
-            <select data-act="setStatus" data-id="\${j.id}">
-              <option value="">Set status…</option>
-              <option value="todo">To Do</option>
-              <option value="applied">Applied</option>
-              <option value="interview">Interview</option>
-              <option value="offer">Offer</option>
-              <option value="rejected">Rejected</option>
-            </select>
-            <button class="btn secondary" data-act="edit" data-id="\${j.id}">Edit</button>
-            <button class="btn danger" data-act="delete" data-id="\${j.id}">Delete</button>
-          </td>\`;
-        tbody.appendChild(tr);
-      }
+    /* ——— Toolbar ——— */
+    .toolbar{display:flex; gap:8px; flex-wrap:wrap; justify-content:flex-end; align-items:center}
+    .btn{
+      background:var(--brand);
+      border:1px solid var(--brand-strong);
+      color:#fff; font-weight:700; letter-spacing:.2px;
+      padding:10px 14px; border-radius:12px; cursor:pointer;
+      box-shadow: 0 6px 18px rgba(255,79,163,.25);
+    }
+    .btn:hover{background:var(--brand-strong)}
+    .btn:focus{outline:none; box-shadow: var(--ring)}
+    .btn.secondary{
+      background:#fff; color:var(--ink);
+      border:1px solid var(--border);
+      box-shadow:none;
+    }
+    .btn.secondary:hover{background:#F8FAFF}
+    .btn.danger{
+      background:#FDE7EB; color:#B5123B; border-color:#F7B7C7;
+    }
+    .btn.danger:hover{background:#FBD0D9}
+    .btn.ghost{
+      background:transparent; border:1px dashed #BBD8F5; color:#35527E;
     }
 
-    // --- Events: Add job ---
-    $('addJobBtn').addEventListener('click', () => {
-      const company = $('company').value.trim();
-      const role = $('role').value.trim();
-      if (!company || !role) { alert('Company and Role are required.'); return; }
-      addJob({
-        company, role,
-        location: $('location').value.trim(),
-        salary: $('salary').value.trim(),
-        deadline: $('deadline').value,
-        link: $('link').value.trim(),
-        notes: $('notes').value.trim(),
-      });
-      // clear inputs
-      ['company','role','location','salary','deadline','link','notes'].forEach(id => $(id).value = '');
-    });
-
-    // Actions in table
-    $('jobsTable').addEventListener('click', (e) => {
-      const btn = e.target.closest('button,select');
-      if (!btn) return;
-      const id = btn.getAttribute('data-id');
-      const act = btn.getAttribute('data-act');
-      if (act === 'delete') {
-        if (confirm('Delete this job?')) removeJob(id);
-      } else if (act === 'edit') {
-        const j = state.jobs.find(x => x.id === id);
-        if (!j) return;
-        const notes = prompt('Edit notes:', j.notes || '') ?? j.notes;
-        const salary = prompt('Edit salary:', j.salary || '') ?? j.salary;
-        updateJob(id, { notes, salary });
-      }
-    });
-
-    // Status dropdown change
-    $('jobsTable').addEventListener('change', (e) => {
-      const sel = e.target;
-      if (sel.getAttribute('data-act') === 'setStatus') {
-        const id = sel.getAttribute('data-id');
-        const val = sel.value;
-        if (val) updateJob(id, { status: val });
-      }
-    });
-
-    // Filters
-    $('search').addEventListener('input', render);
-    $('statusFilter').addEventListener('change', render);
-
-    // Export CSV
-    $('exportBtn').addEventListener('click', () => {
-      const cols = ['company','role','location','link','salary','deadline','status','notes','createdAt','id'];
-      const rows = [cols.join(',')].concat(
-        state.jobs.map(j => cols.map(c => csvCell(j[c] ?? '')).join(','))
-      );
-      const blob = new Blob([rows.join('\n')], { type: 'text/csv;charset=utf-8;' });
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = 'job-buddy.csv';
-      a.click();
-      URL.revokeObjectURL(a.href);
-    });
-
-    // Import CSV
-    $('importCsvInput').addEventListener('change', async (e) => {
-      const file = e.target.files[0];
-      if (!file) return;
-      const text = await file.text();
-      const [header, ...lines] = text.split(/\r?\n/).filter(Boolean);
-      const cols = header.split(',');
-      const idx = (k) => cols.indexOf(k);
-      const toVal = (v) => v?.replace(/^"|"$/g,'').replace(/""/g,'"') ?? '';
-      const jobs = lines.map(line => {
-        const cells = parseCsvLine(line);
-        return {
-          company: toVal(cells[idx('company')]),
-          role: toVal(cells[idx('role')]),
-          location: toVal(cells[idx('location')]),
-          link: toVal(cells[idx('link')]),
-          salary: toVal(cells[idx('salary')]),
-          deadline: toVal(cells[idx('deadline')]),
-          status: toVal(cells[idx('status')]) || 'todo',
-          notes: toVal(cells[idx('notes')]),
-          createdAt: toVal(cells[idx('createdAt')]) || new Date().toISOString(),
-          id: toVal(cells[idx('id')]) || crypto.randomUUID()
-        };
-      });
-      if (!confirm(\`Import \${jobs.length} items? This will merge with existing.\`)) return;
-      const existing = new Map(state.jobs.map(j => [j.id, j]));
-      for (const j of jobs) existing.set(j.id, j);
-      state.jobs = Array.from(existing.values()).sort((a,b) => (b.createdAt||'').localeCompare(a.createdAt||''));
-      save(); render();
-      e.target.value = '';
-    });
-
-    // Reset
-    $('clearAllBtn').addEventListener('click', () => {
-      if (confirm('This will erase all local data (cannot be undone). Proceed?')) {
-        localStorage.removeItem(key);
-        state.jobs = [];
-        render();
-      }
-    });
-
-    // --- Cover Letter Generator (rule-based, no external API) ---
-    $('genLetterBtn').addEventListener('click', () => {
-      const profile = $('profile').value.trim();
-      const jd = $('jd').value.trim();
-      const name = $('yourName').value.trim() || 'Your Name';
-      const email = $('yourEmail').value.trim();
-      const phone = $('yourPhone').value.trim();
-
-      const companyGuess = guessCompanyFromJD(jd);
-      const today = new Date().toLocaleDateString();
-      const body = generateLetter({ name, email, phone, profile, jd, company: companyGuess, date: today });
-      $('letterOut').value = body;
-    });
-
-    $('copyLetterBtn').addEventListener('click', async () => {
-      const txt = $('letterOut').value;
-      if (!txt) return;
-      try { await navigator.clipboard.writeText(txt); alert('Copied!'); } catch { alert('Copy failed.'); }
-    });
-
-    $('downloadLetterBtn').addEventListener('click', () => {
-      const blob = new Blob([$ ('letterOut').value], { type: 'text/plain;charset=utf-8;' });
-      const a = document.createElement('a');
-      a.href = URL.createObjectURL(blob);
-      a.download = 'cover-letter.txt';
-      a.click();
-      URL.revokeObjectURL(a.href);
-    });
-
-    // --- Utils ---
-    function escapeHtml(s='') {
-      return s.replace(/[&<>"']/g, m => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;', "'":'&#39;'}[m]));
-    }
-    function safeUrl(u='') { try { const url = new URL(u); return url.href; } catch { return '#'; } }
-    function formatMoney(v) {
-      const n = Number(String(v).replace(/[^0-9.]/g,'')); if (!n) return v;
-      return n.toLocaleString(undefined, { style: 'currency', currency: 'USD', maximumFractionDigits: 0 });
-    }
-    function csvCell(value) {
-      const s = String(value ?? '');
-      if (/[",\n]/.test(s)) return '"' + s.replace(/"/g,'""') + '"';
-      return s;
-    }
-    function parseCsvLine(line) {
-      const out = []; let cur = ''; let inQ = false;
-      for (let i=0; i<line.length; i++) {
-        const c = line[i];
-        if (inQ) {
-          if (c === '"' && line[i+1] === '"') { cur += '"'; i++; }
-          else if (c === '"') { inQ = false; }
-          else cur += c;
-        } else {
-          if (c === ',') { out.push(cur); cur = ''; }
-          else if (c === '"') { inQ = true; }
-          else cur += c;
-        }
-      }
-      out.push(cur);
-      return out;
-    }
-    function guessCompanyFromJD(jd) {
-      const m = jd.match(/\b(?:at|with)\s+([A-Z][A-Za-z0-9&.\- ]{1,40})/);
-      return m ? m[1].trim() : 'Hiring Team';
-    }
-    function generateLetter({ name, email, phone, profile, jd, company, date }) {
-      const highlights = profile
-        .split(/\n|•|-/).map(s => s.trim()).filter(Boolean)
-        .slice(0, 6).map(s => '• ' + s).join('\n');
-      const keySkills = extractKeywords(jd).slice(0, 10).join(', ');
-      return \`\${date}
-
-\${company} Hiring Team,
-
-I'm excited to apply for this role. Based on the job description, the position values: \${keySkills || 'impact, collaboration, and problem solving'}. I believe my background aligns strongly.
-
-Highlights:
-\${highlights || '• Add 3–6 brief bullets summarizing your most relevant achievements.'}
-
-Why I’m a fit:
-- I’ve delivered measurable impact in similar environments (e.g., performance, reliability, or customer outcomes).
-- My toolkit matches the core stack and responsibilities; I ramp quickly and communicate clearly.
-- I care about shipping, iteration, and being a good teammate.
-
-I’d love to discuss how I can contribute to \${company}. Thank you for your time and consideration.
-
-Best regards,
-\${name}
-\${email ? email + '\\n' : ''}\${phone || ''}\`;
-    }
-    function extractKeywords(text) {
-      const common = new Set(['and','or','the','a','an','of','for','to','in','with','on','by','is','are','you','we','our','as','be','will','this','that','your','at','from','into','about','across','within','per','an','it','they','them','their','including','include','such']);
-      const words = (text||'').toLowerCase().replace(/[^a-z0-9+.#\- ]/g,' ').split(/\s+/).filter(Boolean);
-      const freq = new Map();
-      for (const w of words) {
-        if (common.has(w) || w.length < 2) continue;
-        freq.set(w, (freq.get(w)||0)+1);
-      }
-      return Array.from(freq.entries()).sort((a,b)=>b[1]-a[1]).map(([w])=>w);
-    }
-
-    // boot
-    load();
-  </script>
-</body>
-</html>
