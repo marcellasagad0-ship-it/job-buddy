@@ -7,25 +7,20 @@
   <meta name="description" content="Track job applications, generate tailored cover letters, and stay organized with Job Buddy. All in your browser, private by default.">
   <style>
     /* ===== Brand Palette (matched to your logo) =====
-       Adjust if you want closer matches:
        Light Blue bg: #BFE8FF   | Pink: #FF4FA3
-       Deep Pink (shadow/hover): #E43F92
-       Ink Black: #121418        | Line Ink: #0F0F10
-       Soft White: #FFFFFF
+       Deep Pink: #E43F92       | Ink Black: #121418
     */
     :root{
-      --bg: #BFE8FF;        /* pastel light blue */
-      --bg-2:#D7F1FF;       /* lighter cloud blue */
-      --ink:#121418;        /* near-black for text/outline */
-      --line:#0F0F10;
-      --pink:#FF4FA3;       /* hot pink like the logo fill */
-      --pink-deep:#E43F92;  /* deeper pink for hover/shadow */
-      --card:#ffffff;       /* white cards */
-      --muted:#46627A;      /* desaturated blue-gray for helper text */
-      --chip:#F8FBFF;       /* ultra-light chip fill */
+      --bg: #BFE8FF;
+      --bg-2:#D7F1FF;
+      --ink:#121418;
+      --pink:#FF4FA3;
+      --pink-deep:#E43F92;
+      --card:#ffffff;
+      --muted:#46627A;
+      --chip:#F8FBFF;
       --shadow: 0 10px 28px rgba(17,18,24,0.14);
       --radius:16px;
-      --radius-sm:12px;
     }
 
     *{box-sizing:border-box}
@@ -46,66 +41,39 @@
       display:flex;align-items:center;justify-content:space-between;gap:16px;margin-bottom:18px;
       position:relative;
     }
-    .brand{
-      display:flex;align-items:center;gap:14px;
-    }
+    .brand{display:flex;align-items:center;gap:14px}
     .brand img.logo{
       width:56px;height:56px;object-fit:contain;image-rendering:crisp-edges;
       filter: drop-shadow(2px 3px 0 rgba(0,0,0,0.18));
     }
-    .brand-title{
-      display:flex;flex-direction:column;
-    }
+    .brand-title{display:flex;flex-direction:column}
     .brand-title .title{
       font-size: clamp(26px, 3.2vw, 38px);
-      line-height:1.05;
-      font-weight:900;
-      letter-spacing:0.3px;
-      color: var(--ink);
-      position:relative;
-      display:inline-block;
+      line-height:1.05;font-weight:900;letter-spacing:0.3px;color: var(--ink);
+      position:relative;display:inline-block;
     }
-    /* pink top layer with black "offset shadow" like your logo */
     .brand-title .title .text{
       position:relative; display:inline-block; padding:2px 6px 2px 0;
       color: var(--pink);
-      text-shadow:
-        -3px 3px 0 #000,
-        -3px 3px 0 #000; /* thick offset shadow */
+      text-shadow: -3px 3px 0 #000, -3px 3px 0 #000; /* thick offset shadow */
     }
     .brand-title .tag{
-      margin-top:6px;
-      color:var(--ink);
-      font-size:14px;
-      font-weight:600;
-      opacity:.9;
+      margin-top:6px;color:var(--ink);font-size:14px;font-weight:600;opacity:.9;
     }
 
     .toolbar{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
 
     .btn{
-      background: var(--pink);
-      border: 2px solid #000;
-      color:#fff;
-      padding:10px 14px;
-      border-radius: 999px;
-      cursor:pointer;
-      font-weight:800;
-      letter-spacing:.2px;
-      box-shadow: 0 4px 0 #000;
+      background: var(--pink); border: 2px solid #000; color:#fff;
+      padding:10px 14px; border-radius: 999px; cursor:pointer;
+      font-weight:800; letter-spacing:.2px; box-shadow: 0 4px 0 #000;
       transition: transform .05s ease, box-shadow .05s ease, background .15s ease;
     }
     .btn:hover{ background: var(--pink-deep); }
     .btn:active{ transform: translateY(2px); box-shadow:0 2px 0 #000; }
-    .btn.secondary{
-      background:#fff;color:var(--ink);border-color:#000;
-    }
-    .btn.ghost{
-      background:transparent;color:var(--ink);border:2px dashed #000;
-    }
-    .btn.danger{
-      background:#FF6B8A;border-color:#000;
-    }
+    .btn.secondary{ background:#fff;color:var(--ink);border-color:#000; }
+    .btn.ghost{ background:transparent;color:var(--ink);border:2px dashed #000; }
+    .btn.danger{ background:#FF6B8A;border-color:#000; }
 
     /* ===== Cards / Sections ===== */
     .grid{display:grid;grid-template-columns:1.2fr 1fr;gap:16px}
@@ -161,20 +129,19 @@
       border:2px solid #000; display:inline-flex; gap:6px; align-items:center; box-shadow:0 2px 0 #000;
       background:var(--chip);
     }
-    .s-applied{background:#FFD6EC}     /* soft pink */
+    .s-applied{background:#FFD6EC}
     .s-interview{background:#D9FFE8}
     .s-offer{background:#FFF1B8}
     .s-rejected{background:#FFE0E0}
-    .pill{font-size:11px;color:#394b5b;padding:4px 8px;border:1px solid rgba(0,0,0,0.08);border-radius:999px}
 
-    /* ===== Cute watermark bear in the background (optional) ===== */
+    footer{margin-top:24px;color:#2a3f52;font-size:12px;text-align:center}
+
+    /* ===== Watermark bear (optional) ===== */
     .watermark{
       position:fixed; right:-40px; bottom:-10px; width:320px; height:320px; opacity:.15;
       pointer-events:none; filter: drop-shadow(2px 3px 0 rgba(0,0,0,0.2));
       transform: rotate(-6deg);
     }
-
-    footer{margin-top:24px;color:#2a3f52;font-size:12px;text-align:center}
 
     /* ===== Mobile ===== */
     @media (max-width: 980px){
@@ -185,14 +152,14 @@
   </style>
 </head>
 <body>
-  <!-- Watermark (uses the same logo) -->
-  <img src="job-buddy-logo.png" alt="" class="watermark" aria-hidden="true" />
+  <!-- Watermark (uses the same logo). If your filename is different, change the src. -->
+  <img class="watermark" src="job-buddy-logo.png" alt="Job Buddy bear watermark">
 
   <div class="container">
     <header>
       <div class="brand">
-        <!-- If your file name is different, change src to "Untitled (1).png" -->
-        <img class="logo" src="job-buddy-logo.png" alt="Job Buddy bear logo">
+        <!-- Header logo -->
+        <img class="logo" src="job-buddy-logo.png" alt="Job Buddy logo">
         <div class="brand-title">
           <div class="title"><span class="text">JOB BUDDY</span></div>
           <div class="tag">Simply connecting talent to opportunity</div>
