@@ -136,9 +136,9 @@
 
     footer{margin-top:24px;color:#2a3f52;font-size:12px;text-align:center}
 
-    /* ===== Watermark bear (optional) ===== */
+    /* ===== Watermark bear (uses same logo) ===== */
     .watermark{
-      position:fixed; right:-40px; bottom:-10px; width:320px; height:320px; opacity:.15;
+      position:fixed; right:-40px; bottom:-10px; width:320px; height:auto; opacity:.15;
       pointer-events:none; filter: drop-shadow(2px 3px 0 rgba(0,0,0,0.2));
       transform: rotate(-6deg);
     }
@@ -152,14 +152,14 @@
   </style>
 </head>
 <body>
-  <!-- Watermark (uses the same logo). If your filename is different, change the src. -->
-  <img class="watermark" src="job-buddy-logo.png" alt="Job Buddy bear watermark">
+  <!-- Watermark image (change the src if your filename is different) -->
+  <img src="Untitled (1).png" alt="" class="watermark" aria-hidden="true" />
 
   <div class="container">
     <header>
       <div class="brand">
-        <!-- Header logo -->
-        <img class="logo" src="job-buddy-logo.png" alt="Job Buddy logo">
+        <!-- Header logo (change the src if your filename is different) -->
+        <img src="Untitled (1).png" alt="Job Buddy logo" class="logo" />
         <div class="brand-title">
           <div class="title"><span class="text">JOB BUDDY</span></div>
           <div class="tag">Simply connecting talent to opportunity</div>
